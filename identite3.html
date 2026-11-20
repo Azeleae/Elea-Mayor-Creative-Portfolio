@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azélaé Twitch - Portfolio Éléa</title>
+    <link rel="icon" type="image/png" href="src/favicon.png">
+    <!-- Polices Google Fonts : Montserrat & Figtree -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@700;800;900&family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="identite3.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="navbar">
+        <a href="portfolio.html" class="home-icon" aria-label="Retour au portfolio">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+        </a>
+
+        <!-- Bouton menu déroulant (visible uniquement sur mobile) -->
+        <button
+            type="button"
+            id="mobile-menu-toggle"
+            class="mobile-menu-btn"
+            aria-label="Ouvrir le menu"
+            aria-expanded="false"
+            aria-controls="mobile-dropdown"
+        >
+            <span class="burger-lines" aria-hidden="true"></span>
+        </button>
+
+        <!-- Navigation & contrôles (bureau : alignés horizontalement | mobile : menu déroulant) -->
+        <div id="mobile-dropdown" class="nav-panel">
+            <nav class="nav-links" aria-label="Navigation principale">
+                <a href="contact.html" data-fr="Contact" data-en="Contact">Contact</a>
+                <span class="nav-dot" aria-hidden="true">•</span>
+                <a href="presentation.html" data-fr="Présentation" data-en="About">Présentation</a>
+            </nav>
+
+            <div class="nav-controls">
+                <button type="button" id="lang-toggle" class="control-btn" aria-label="Changer de langue">
+                    <span id="lang-fr" class="lang-option active">FR</span>
+                    <span class="lang-divider" aria-hidden="true">|</span>
+                    <span id="lang-en" class="lang-option">EN</span>
+                </button>
+                <button type="button" id="theme-toggle" class="control-btn theme-icon" aria-label="Changer de thème">⏾</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Titre déroulant "Azélaé Twitch" avec flèche -->
+    <div class="edition-title-container" id="titleDropdownContainer">
+        <button
+            type="button"
+            class="dropdown-header"
+            id="dropdownToggle"
+            aria-expanded="false"
+            aria-controls="dropdownMenu"
+        >
+            <h1 class="page-title">Azélaé Twitch</h1>
+            <span class="arrow-icon" aria-hidden="true">▼</span>
+        </button>
+        
+        <ul class="dropdown-menu" id="dropdownMenu">
+            <li><a href="identitevisuelle.html" data-fr="Retour Identité visuelle" data-en="Back to Visual Identity">Retour Identité visuelle</a></li>
+        </ul>
+    </div>
+
+    <!-- Contenu Pleine Largeur pour l'image de montage -->
+    <main class="project-fullscreen-content">
+        <div class="montage-container">
+            <!-- Image de montage chargée depuis le dossier src -->
+            <img src="src/montage_azelae.png" alt="Montage Azélaé Twitch" class="montage-image" onerror="this.src='https://via.placeholder.com/1920x3000/ff8fab/ffffff?text=Image+de+montage+Az%C3%A9la%C3%A9+Twitch'">
+        </div>
+
+        <!-- Bouton Retour -->
+        <div class="back-button-container">
+            <a href="identitevisuelle.html" class="back-btn" data-fr="retourner à l'identité visuelle" data-en="back to visual identity">retourner à l'identité visuelle</a>
+        </div>
+    </main>
+
+    <script>
+        // --- 1. Menu Déroulant du titre ---
+        const dropdownToggle = document.getElementById('dropdownToggle');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        function setTitleDropdown(open) {
+            dropdownToggle.classList.toggle('active', open);
+            dropdownToggle.setAttribute('aria-expanded', String(open));
+            dropdownMenu.classList.toggle('open', open);
+        }
+
+        dropdownToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = dropdownMenu.classList.contains('open');
+            setTitleDropdown(!isOpen);
+        });
+
+        dropdownMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => setTitleDropdown(false));
+        });
+
+        // --- 2. Menu Déroulant Mobile (Navbar) ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-toggle');
+        const mobileDropdown = document.getElementById('mobile-dropdown');
+
+        function setMobileMenu(open) {
+            if (!mobileMenuBtn || !mobileDropdown) return;
+            mobileMenuBtn.setAttribute('aria-expanded', String(open));
+            mobileDropdown.classList.toggle('is-open', open);
+        }
+
+        if (mobileMenuBtn && mobileDropdown) {
+            mobileMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
+                setMobileMenu(!isOpen);
+            });
+
+            mobileDropdown.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => setMobileMenu(false));
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.navbar')) {
+                setMobileMenu(false);
+            }
+            if (!e.target.closest('#titleDropdownContainer')) {
+                setTitleDropdown(false);
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                setMobileMenu(false);
+                setTitleDropdown(false);
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 900) {
+                setMobileMenu(false);
+            }
+        });
+
+        // --- 3. Synchronisation Langue & Mode Sombre ---
+        const langToggleBtn = document.getElementById('lang-toggle');
+        const langFr = document.getElementById('lang-fr');
+        const langEn = document.getElementById('lang-en');
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const translatableElements = document.querySelectorAll('[data-fr]');
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            langEn.classList.toggle('active', lang === 'en');
+            langFr.classList.toggle('active', lang === 'fr');
+            translatableElements.forEach(el => {
+                const translation = el.getAttribute(`data-${lang}`);
+                if (translation) {
+                    el.textContent = translation;
+                }
+            });
+        }
+
+        function applyTheme(theme) {
+            const isDark = theme === 'dark';
+            document.body.classList.toggle('dark-mode', isDark);
+            themeToggleBtn.textContent = isDark ? '☀︎' : '⏾';
+        }
+
+        let currentLang = localStorage.getItem('site_lang') || 'fr';
+        let currentTheme = localStorage.getItem('site_theme') || 'light';
+
+        applyLanguage(currentLang);
+        applyTheme(currentTheme);
+
+        langToggleBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'fr' ? 'en' : 'fr';
+            localStorage.setItem('site_lang', currentLang);
+            applyLanguage(currentLang);
+        });
+
+        themeToggleBtn.addEventListener('click', () => {
+            currentTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+            localStorage.setItem('site_theme', currentTheme);
+            applyTheme(currentTheme);
+        });
+    </script>
+</body>
+</html>
